@@ -50,9 +50,13 @@ class Blockchain {
         return this.chain[this.chain.length - 1];
     }
 
-    pow() {
+    mine(nodeAddress) {
+        // Find consensus
         const consensus = new PoWConsensus().find();
-        this.newBlock(consensus.proof);
+        // Add miner reward to the mining node
+        this.newTransaction('0', nodeAddress, 5);
+        // Add new block to the chain
+        return this.newBlock(consensus.proof);
     }
 }
 

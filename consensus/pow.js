@@ -12,7 +12,7 @@ const consensusStep = (value) => {
 
 const consensusValidityRule = (proof) => {
     if (!proof) return false;
-    return proof[proof.length - 2] === '0' && proof[proof.length - 1] === '5';
+    return proof[proof.length - 2] === '1' && proof[proof.length - 1] === '0';
 }
 
 class PoWConsensus {
