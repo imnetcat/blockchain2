@@ -51,7 +51,7 @@ class Blockchain {
     }
 
     mine(nodeAddress) {
-        // Find consensus
+        // Calculate PoW
         const proof = new PoW().find();
         // Add miner reward to the mining node
         this.newTransaction('0', nodeAddress, 5);
