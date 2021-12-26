@@ -1,13 +1,7 @@
 import { createHash } from 'crypto';
-function random(min, max) {
-    return Math.random() * (max - min) + min;
-}
 
-
-const PoWStep = (value) => {
-    const newValue = value || new Date().getTime() % random(9999999999, 100);
-    const proof = createHash('sha256').update(newValue.toString()).digest('hex');
-    return { value: newValue, proof };
+const PoWStep = (seed) => {
+    return createHash('sha256').update(seed).digest('hex');
 }
 
 const PoWValidityRule = (proof) => {
@@ -16,17 +10,16 @@ const PoWValidityRule = (proof) => {
 }
 
 class PoW {
-    find() {
-        let result = undefined;
-        while (!PoWValidityRule(result?.proof)) {
-            result = PoWStep(result?.proof);
+    find(previousProof) {
+        let proof = undefined;
+        while (!PoWValidityRule(proof)) {
+            proof = PoWStep(`${previousProof}${proof}`);
         }
-        return result;
+        return proof;
     }
-    validate(result) {
-        if (!result?.proof || !result?.value) return false;
-        const proof = PoWStep(result.value);
-        return proof === result.proof && PoWValidityRule(result.proof);
+    validate(previousProof, proof) {
+        if (!previousProof || !proof) return false;
+        return PoWValidityRule(proof);
     }
 }
 

@@ -52,11 +52,11 @@ class Blockchain {
 
     mine(nodeAddress) {
         // Find consensus
-        const consensus = new PoW().find();
+        const proof = new PoW().find();
         // Add miner reward to the mining node
         this.newTransaction('0', nodeAddress, 5);
         // Add new block to the chain
-        return this.newBlock(consensus.proof);
+        return this.newBlock(proof);
     }
 }
 
