@@ -1,5 +1,9 @@
 import { createHash } from 'crypto';
-import PoW from './pow.js';
+
+const PoWValidityRule = (proof) => {
+    if (!proof) return false;
+    return proof[proof.length - 2] === '1' && proof[proof.length - 1] === '0';
+}
 
 class Blockchain {
     constructor() {
@@ -50,9 +54,23 @@ class Blockchain {
         return this.chain[this.chain.length - 1];
     }
 
+    proofOfWork() {
+        let proof = undefined;
+        const previousProof = this.getLastBlock().proof;
+        while (!PoWValidityRule(proof)) {
+            proof = createHash('sha256').update(`${previousProof}${proof}`).digest('hex')
+        }
+        return proof;
+    }
+
+    validatePoWProof(previousProof, proof) {
+        if (!previousProof || !proof) return false;
+        return PoWValidityRule(proof);
+    }
+
     mine(nodeAddress) {
         // Calculate PoW
-        const proof = new PoW().find();
+        const proof = this.proofOfWork();
         // Add miner reward to the mining node
         this.newTransaction('0', nodeAddress, 5);
         // Add new block to the chain
