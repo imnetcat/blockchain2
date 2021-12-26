@@ -63,7 +63,7 @@ class Blockchain {
         return proof;
     }
 
-    validatePoWProof(previousProof, proof) {
+    validateProofOfWork(previousProof, proof) {
         if (!previousProof || !proof) return false;
         return PoWValidityRule(proof);
     }
